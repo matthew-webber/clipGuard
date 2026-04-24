@@ -18,7 +18,10 @@ struct BlacklistSettingsTab: View {
             Divider()
 
             addRow
+
+            Spacer(minLength: 0)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .padding(2)
     }
 
