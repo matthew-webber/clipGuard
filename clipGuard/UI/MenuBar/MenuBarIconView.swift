@@ -11,8 +11,9 @@ struct MenuBarIconView: View {
                     .resizable()
                     .frame(width: 22, height: 22)
             case .disabled:
-                Image(systemName: "pause.circle")
-                    .font(.system(size: 18))
+                Image(nsImage: Self.disabledIconImage)
+                    .resizable()
+                    .frame(width: 22, height: 22)
             case .flash:
                 Image(systemName: "sparkles")
                     .font(.system(size: 18))
@@ -45,6 +46,37 @@ struct MenuBarIconView: View {
                 in: NSRect(x: 7, y: 7, width: 10, height: 10),
                 from: .zero,
                 operation: .destinationOut,
+                fraction: 1
+            )
+        }
+
+        image.isTemplate = true
+        return image
+    }()
+
+    private static let disabledIconImage: NSImage = {
+        let imageSize = NSSize(width: 24, height: 24)
+        let image = NSImage(size: imageSize)
+
+        image.lockFocus()
+        defer { image.unlockFocus() }
+
+        if let shield = NSImage(systemSymbolName: "shield", accessibilityDescription: nil)?
+            .withSymbolConfiguration(.init(pointSize: 22, weight: .regular)) {
+            shield.draw(
+                in: NSRect(x: 1, y: 1, width: 22, height: 22),
+                from: .zero,
+                operation: .sourceOver,
+                fraction: 1
+            )
+        }
+
+        if let scissors = NSImage(systemSymbolName: "scissors", accessibilityDescription: nil)?
+            .withSymbolConfiguration(.init(pointSize: 10, weight: .bold)) {
+            scissors.draw(
+                in: NSRect(x: 7, y: 7, width: 10, height: 10),
+                from: .zero,
+                operation: .sourceOver,
                 fraction: 1
             )
         }

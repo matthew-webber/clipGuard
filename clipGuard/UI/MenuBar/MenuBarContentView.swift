@@ -24,27 +24,20 @@ struct MenuBarContentView: View {
 
     private var header: some View {
         @Bindable var settings = env.settings
-        return VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Image(systemName: "scissors.circle.fill")
-                    .font(.title2)
-                    .foregroundStyle(.tint)
-                VStack(alignment: .leading, spacing: 1) {
-                    Text("ClipGuard")
-                        .font(.system(.headline))
-                    Text(env.settings.enabled ? "Watching clipboard" : "Paused")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer()
-                Toggle("", isOn: Binding(
-                    get: { env.settings.enabled },
-                    set: { env.setEnabled($0) }
-                ))
-                .toggleStyle(.switch)
-                .labelsHidden()
-                .help(env.settings.enabled ? "Pause ClipGuard" : "Resume ClipGuard")
-            }
+        return HStack(spacing: 8) {
+            Text("ClipGuard")
+                .font(.system(.headline))
+            Spacer()
+            Text(env.settings.enabled ? "Enabled" : "Disabled")
+                .font(.caption)
+                .foregroundStyle(env.settings.enabled ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
+            Toggle("", isOn: Binding(
+                get: { env.settings.enabled },
+                set: { env.setEnabled($0) }
+            ))
+            .toggleStyle(.switch)
+            .labelsHidden()
+            .help(env.settings.enabled ? "Pause ClipGuard" : "Resume ClipGuard")
         }
         .padding(.horizontal, 12)
         .padding(.bottom, 6)
@@ -53,16 +46,17 @@ struct MenuBarContentView: View {
     private var recentSection: some View {
         let recent = Array(events.prefix(5))
         return VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Label("Recent", systemImage: "clock")
+            HStack(spacing: 4) {
+                Spacer()
+                Text("Recent")
                     .font(.caption.bold())
                     .foregroundStyle(.secondary)
-                Spacer()
                 if !events.isEmpty {
-                    Text("\(events.count)")
-                        .font(.caption2)
+                    Text("(\(events.count))")
+                        .font(.caption.bold())
                         .foregroundStyle(.secondary)
                 }
+                Spacer()
             }
             .padding(.horizontal, 12)
 
