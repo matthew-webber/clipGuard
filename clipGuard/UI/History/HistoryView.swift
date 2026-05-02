@@ -7,7 +7,6 @@ struct HistoryView: View {
 
     @State private var selection: ClipEvent.ID?
     @State private var searchText = ""
-    @State private var confirmClear = false
 
     var body: some View {
         NavigationSplitView {
@@ -20,21 +19,13 @@ struct HistoryView: View {
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button(role: .destructive) {
-                    confirmClear = true
+                    env.history.clearAll()
+                    selection = nil
                 } label: {
                     Label("Clear history", systemImage: "trash")
                 }
                 .disabled(events.isEmpty)
             }
-        }
-        .confirmationDialog("Clear all history?", isPresented: $confirmClear, titleVisibility: .visible) {
-            Button("Clear All", role: .destructive) {
-                env.history.clearAll()
-                selection = nil
-            }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("This removes every recorded clipboard event. This cannot be undone.")
         }
     }
 
@@ -103,8 +94,9 @@ struct HistoryView: View {
                 )
                 ChipView(
                     systemImage: "clock",
-                    text: event.timestamp.formatted(.relative(presentation: .named)),
-                    style: .neutral
+                    text: CompactRelativeTime.format(date: event.timestamp),
+                    style: .neutral,
+                    help: event.timestamp.formatted(date: .abbreviated, time: .standard)
                 )
                 if event.undone {
                     ChipView(systemImage: "arrow.uturn.backward", text: "Undone", style: .neutral)

@@ -34,9 +34,7 @@ struct HistoryRowView: View {
                         ChipView(systemImage: "arrow.uturn.backward", text: "Undone", style: .neutral)
                     }
                     Spacer()
-                    Text(event.timestamp, style: .relative)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    CompactRelativeTimeText(date: event.timestamp)
                 }
             }
         }

@@ -46,17 +46,36 @@ struct MenuBarContentView: View {
     private var recentSection: some View {
         let recent = Array(events.prefix(5))
         return VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 4) {
-                Spacer()
-                Text("Recent")
-                    .font(.caption.bold())
-                    .foregroundStyle(.secondary)
-                if !events.isEmpty {
-                    Text("(\(events.count))")
+            ZStack {
+                HStack(spacing: 4) {
+                    Spacer()
+                    Text("Recent")
                         .font(.caption.bold())
                         .foregroundStyle(.secondary)
+                    if !events.isEmpty {
+                        Text("(\(events.count))")
+                            .font(.caption.bold())
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer()
                 }
-                Spacer()
+                if !events.isEmpty {
+                    HStack {
+                        Spacer()
+                        Button {
+                            env.history.clearAll()
+                        } label: {
+                            Image(systemName: "trash")
+                                .font(.system(size: 11, weight: .semibold))
+                                .foregroundStyle(.secondary)
+                                .padding(.horizontal, 4)
+                                .padding(.vertical, 2)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .help("Clear all history")
+                    }
+                }
             }
             .padding(.horizontal, 12)
 
@@ -140,9 +159,7 @@ private struct MenuRecentRow: View {
                         provider: env.ruleProvider
                     )
                     Spacer()
-                    Text(event.timestamp, style: .relative)
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
+                    CompactRelativeTimeText(date: event.timestamp)
                 }
             }
             Spacer(minLength: 0)
