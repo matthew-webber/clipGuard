@@ -5,6 +5,7 @@ struct GeneralSettingsTab: View {
 
     var body: some View {
         @Bindable var settings = env.settings
+        let loginItems = env.loginItems
         Form {
             Section {
                 Toggle(isOn: Binding(
@@ -29,6 +30,33 @@ struct GeneralSettingsTab: View {
                     .foregroundStyle(.secondary)
             }
 
+            Section {
+                Toggle(isOn: Binding(
+                    get: { loginItems.isEnabled },
+                    set: { loginItems.setEnabled($0) }
+                )) {
+                    Label("Launch at login", systemImage: "power")
+                }
+
+                if let statusMessage = loginItems.statusMessage {
+                    Text(statusMessage)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                if let errorMessage = loginItems.errorMessage {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            } header: {
+                Text("Startup")
+            } footer: {
+                Text("Start ClipGuard automatically when you sign in.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             Section("Status") {
                 HStack {
                     Image(systemName: settings.enabled ? "circle.fill" : "pause.circle.fill")
@@ -40,5 +68,8 @@ struct GeneralSettingsTab: View {
             }
         }
         .formStyle(.grouped)
+        .onAppear {
+            loginItems.refresh()
+        }
     }
 }

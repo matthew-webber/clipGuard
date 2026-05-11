@@ -20,6 +20,7 @@ final class AppEnvironment {
     let engine: TransformEngine
     let history: HistoryStore
     let notifications: NotificationService
+    let loginItems: LoginItemController
     let modelContainer: ModelContainer
 
     private(set) var iconState: MenuBarIconState = .idle
@@ -31,12 +32,14 @@ final class AppEnvironment {
         let pasteboard = NSPasteboardAdapter()
         let resolver = FrontmostAppResolver()
         let notifications = NotificationService()
+        let loginItems = LoginItemController()
 
         self.settings = settings
         self.ruleProvider = ruleProvider
         self.pasteboard = pasteboard
         self.resolver = resolver
         self.notifications = notifications
+        self.loginItems = loginItems
 
         let monitor = ClipboardMonitor(pasteboard: pasteboard, resolver: resolver)
         self.monitor = monitor
